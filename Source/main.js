@@ -1,0 +1,1 @@
+uBit.display.print('A');

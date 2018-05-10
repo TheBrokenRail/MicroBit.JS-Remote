@@ -1,0 +1,22 @@
+sudo: required
+addons:
+  apt:
+    sources:
+      - sourceline: 'ppa:team-gcc-arm-embedded/ppa'
+    packages:
+      - python-setuptools
+      - cmake
+      - ninja-build
+      - libssl-dev
+      - srecord
+      - gcc-arm-embedded
+script:
+  - chmod +x ./Scripts/Build.sh
+  - ./Scripts/Build.sh
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  local-dir: GH-Pages
+  on:
+    branch: master
