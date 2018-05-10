@@ -2,14 +2,6 @@
 
 set -e
 
-tput setaf 3; tput bold; echo "Generating C++ Source for JS File"
-printf '#include <string>\nchar *jsSource = (char *)R"~~~~('"$(cat Source/init.js)"'\n'$(cat Source/main.js)""')~~~~";' > Source/JSSource.h
-
-tput setaf 3; tput bold; echo "Cloning mJS"
-git clone --depth=1 https://github.com/cesanta/mjs.git
-cp mjs/mjs.c Source
-cp mjs/mjs.h Source
-
 tput setaf 3; tput bold; echo "Installing Yotta"
 pip install --user yotta
 tput setaf 3; tput bold; echo "Setting Yotta Target"
