@@ -18,4 +18,4 @@ yotta target bbc-microbit-classic-gcc
 tput setaf 3; tput bold; echo "Building Project"
 VERBOSE=1 yotta build
 tput setaf 3; tput bold; echo "Copying Output"
-cp build/bbc-microbit-classic-gcc/Source/microbit-js-combined.hex GH-Pages/microbit-js.hex 
+cp build/bbc-microbit-classic-gcc/Source/microbit-js-remote-combined.hex GH-Pages/microbit-js.hex 
