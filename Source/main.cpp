@@ -9,7 +9,7 @@ int connected = 0;
 int bluetooth = 0;
 
 void run(ManagedString msg) {
-  Command command = parse(msg);
+  Command command = parseCommand(msg);
 }
 
 void onConnected(MicroBitEvent) {
