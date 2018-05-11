@@ -10,8 +10,8 @@ MicroBitUARTService *uart;
 int connected = 0;
 int bluetooth = 0;
 
-void run(ManagedString msg) {
-  Command command = parseCommand(msg);
+void bluetoothSend(std::string msg) {
+  uart->send(msg);
 }
 
 void onConnected(MicroBitEvent) {
