@@ -2,6 +2,11 @@
 #include <vector>
 #include "parser.h"
 
+Command::Command(std::string newAction, std::vector<std::string> newArgs) {
+  action = newAction;
+  args = newArgs;
+}
+
 Command parseCommand(std::string command) {
   std::string action = "";
   int stage = 0;
