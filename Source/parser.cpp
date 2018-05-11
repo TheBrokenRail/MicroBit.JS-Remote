@@ -5,6 +5,10 @@ class Command {
   public:
     std::string action;
     std::vector<std::string> args;
+    Command(std::string action, std::vector<std::string> args) {
+      this.action = action;
+      this.args = args;
+    };
 };
 
 Command parseCommand(std::string command) {
@@ -16,29 +20,25 @@ Command parseCommand(std::string command) {
   for (int i = 0; i < command.length(); i++) {
     if (command[i] == ':') {
       stage = 1;
-      args[0] = "":
       continue;
     }
     if (stage == 0) {
-      action.append(command[i]);
+      action.append(1, command[i]);
     } else if (stage == 1) {
       if (command[i] == '"') {
         if (inString == 0) {
           inString = 1;
+          args.push_back("");
         } else {
           inString = 0;
         }
         continue;
       } else if (command[i] == ',' && inString == 0) {
         arg++;
-        args[arg] = "";
       } else if (inString == 1) {
-        args[arg].append(command[i]);
+        args[arg].append(1, command[i]);
       }
     }
   }
-  Command obj();
-  obj.action = action;
-  obj.args = args;
-  return obj;
+  return new Command(action, obj);
 }
