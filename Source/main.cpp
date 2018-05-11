@@ -1,4 +1,4 @@
-#include <cstring>
+#include <string>
 #include "MicroBit.h"
 #include "MicroBitUARTService.h"
 #include "parser.h"
