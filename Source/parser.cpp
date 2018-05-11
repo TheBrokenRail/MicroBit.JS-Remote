@@ -1,11 +1,10 @@
 #include <string>
-#include <algorithm>
 #include <vector>
 
 class Command {
   public:
     std::string action;
-    std::string[] args;
+    std::vector<std::string> args;
 }
 
 Command parseCommand(std::string command) {
@@ -40,8 +39,6 @@ Command parseCommand(std::string command) {
   }
   Command obj();
   obj.action = action;
-  std::string argsArray[args.length()];
-  std::copy(args.begin(), args.end(), argsArray);
-  obj.args = argsArray;
-  return command;
+  obj.args = args;
+  return obj;
 }
