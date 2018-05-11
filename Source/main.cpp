@@ -1,6 +1,7 @@
 #include <cstring>
 #include "MicroBit.h"
 #include "MicroBitUARTService.h"
+#include "parser.h"
 
 MicroBit uBit;
 MicroBitUARTService *uart;
