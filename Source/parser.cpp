@@ -36,5 +36,5 @@ Command parseCommand(std::string command) {
       }
     }
   }
-  return new Command(action, args);
+  return Command(action, args);
 }
