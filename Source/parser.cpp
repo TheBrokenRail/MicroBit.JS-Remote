@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+#include "parser.h"
 
 Command parseCommand(std::string command) {
   std::string action = "";
