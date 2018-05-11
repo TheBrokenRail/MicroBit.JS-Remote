@@ -1,3 +1,6 @@
+#include <string>
+#include <vector>
+
 class Command {
   public:
     std::string action;
