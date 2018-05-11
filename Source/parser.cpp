@@ -5,9 +5,9 @@ class Command {
   public:
     std::string action;
     std::vector<std::string> args;
-    Command(std::string action, std::vector<std::string> args) {
-      this.action = action;
-      this.args = args;
+    Command(std::string newAction, std::vector<std::string> newArgs) {
+      action = newAction;
+      args = newArgs;
     };
 };
 
@@ -40,5 +40,5 @@ Command parseCommand(std::string command) {
       }
     }
   }
-  return new Command(action, obj);
+  return new Command(action, args);
 }
