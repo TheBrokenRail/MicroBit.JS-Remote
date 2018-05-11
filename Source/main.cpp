@@ -21,7 +21,7 @@ void onConnected(MicroBitEvent) {
     ManagedString eom(";");
     while (connected == 1 && bluetooth == 1) {
       ManagedString msg = uart->readUntil(eom);
-      runCommand(msg, uBit);
+      runCommand(parseCommand(msg), uBit);
     }
   }
 }
