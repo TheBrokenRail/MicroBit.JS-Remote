@@ -2,6 +2,7 @@
 #include "MicroBit.h"
 #include "MicroBitUARTService.h"
 #include "parser.h"
+#include "util.h"
 
 MicroBit uBit;
 MicroBitUARTService *uart;
@@ -14,13 +15,14 @@ void run(ManagedString msg) {
 }
 
 void onConnected(MicroBitEvent) {
-  bluetooth = 1;
-  connected = 1;
-  // mobile app will send ASCII strings terminated with the colon character
-  ManagedString eom(";");
-  while (connected == 1 && bluetooth == 1) {
-    ManagedString msg = uart->readUntil(eom);
-    run(msg);
+  if (connected == 0) {
+    bluetooth = 1;
+    connected = 1;
+    ManagedString eom(";");
+    while (connected == 1 && bluetooth == 1) {
+      ManagedString msg = uart->readUntil(eom);
+      runCommand(msg, uBit);
+    }
   }
 }
 
