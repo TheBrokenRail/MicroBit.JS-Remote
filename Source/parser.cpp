@@ -5,7 +5,7 @@ class Command {
   public:
     std::string action;
     std::vector<std::string> args;
-}
+};
 
 Command parseCommand(std::string command) {
   std::string action = "";
