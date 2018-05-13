@@ -100,7 +100,7 @@ int main() {
   
   while (true) {
     ManagedString msg = uBit.serial.readUntil(";");
-    serialSend(".MSG:" + msg.toCharArray() + ";");
+    serialSend(".MSG:" + std::string(msg.toCharArray()) + ";");
     if (msg.toCharArray()[0] != '.') {
       runCommand(parseCommand(msg), serialSend);
     }
