@@ -22,11 +22,10 @@ Command parseCommand(ManagedString commandTemp) {
   std::string command = commandTemp.toCharArray();
   std::string action = "";
   int stage = 0;
-  int arg = 0;
   std::vector<std::string> args;
   std::string temp = "";
   int inString = 0;
-  for (int i = 0; i < command.length(); i++) {
+  for (unsigned int i = 0; i < command.length(); i++) {
     if (stage == 0 && command[i] == ':') {
       stage = 1;
     } else if (stage == 0) {
@@ -41,7 +40,6 @@ Command parseCommand(ManagedString commandTemp) {
       } else if ((command[i] == ',' || command[i] == ';') && inString == 0) {
         args.push_back(temp);
         temp = "";
-        arg++;
       } else if (inString == 1) {
         temp.append(1, command[i]);
       }
@@ -51,9 +49,9 @@ Command parseCommand(ManagedString commandTemp) {
 }
 
 void runCommand(Command command, void (*send)(std::string)) {
-  send("." + command.action + ";");
-  send("." + command.args[0] + ";");
-  send("." + command.args[1] + ";");
+  send(".MSG:" + command.action + ";");
+  send(".MSG:" + command.args[0] + ";");
+  send(".MSG:" + command.args[1] + ";");
   if (command.action == "DISPLAY_PLOT") {
     uBit.display.image.setPixelValue(std::stoi(command.args[1]), std::stoi(command.args[2]), std::stoi(command.args[3]));
     send(".DONE:" + command.args[0] + ";");
@@ -102,6 +100,7 @@ int main() {
   
   while (true) {
     ManagedString msg = uBit.serial.readUntil(";");
+    serialSend(".MSG:" + msg.toCharArray() + ";");
     if (msg.toCharArray()[0] != '.') {
       runCommand(parseCommand(msg), serialSend);
     }
