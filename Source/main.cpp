@@ -75,7 +75,6 @@ void serialSend(std::string msg) {
 
 void onConnected(MicroBitEvent) {
   if (connected == 0) {
-    bluetooth = 1;
     connected = 1;
     while (connected == 1) {
       ManagedString msg = uart->readUntil(";");
