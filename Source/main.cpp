@@ -30,7 +30,7 @@ Command parseCommand(ManagedString commandTemp) {
     if (stage == 0 && command[i] == ':') {
       stage = 1;
     } else if (stage == 0) {
-      action = action + command[i];
+      action.append(1, command[i]);
     } else if (stage == 1) {
       if (command[i] == '"' && command[i - 1] != '\\') {
         if (inString == 0) {
@@ -38,13 +38,12 @@ Command parseCommand(ManagedString commandTemp) {
         } else {
           inString = 0;
         }
-        continue;
-      } else if (command[i] == ',' && inString == 0) {
+      } else if ((command[i] == ',' || command[i] == ';') && inString == 0) {
         args.push_back(temp);
         temp = "";
         arg++;
       } else if (inString == 1) {
-        temp = temp + command[i];
+        temp.append(1, command[i]);
       }
     }
   }
