@@ -19,7 +19,7 @@ Command::Command(std::string newAction, std::vector<std::string> newArgs) {
 }
 
 Command parseCommand(ManagedString commandTemp) {
-  const char *ommand = commandTemp.toCharArray();
+  const char *command = commandTemp.toCharArray();
   std::string action = "";
   int stage = 0;
   int arg = 0;
@@ -52,13 +52,14 @@ Command parseCommand(ManagedString commandTemp) {
 }
 
 void runCommand(Command command, void (*send)(std::string)) {
-  switch (command.action) {
-    case "DISPLAY_PLOT":
-      uBit.display.image.setPixelValue(std::stoi(command.args[1]), std::stoi(command.args[2]), std::stoi(command.args[3]));
-      send(".DONE:" + command.args[0] + ";");
-      break;
-    default:
-      send(".INVALID_COMMAND_ERROR:" + args[0] + ";");
+  if (command.action == "DISPLAY_PLOT") {
+    uBit.display.image.setPixelValue(std::stoi(command.args[1]), std::stoi(command.args[2]), std::stoi(command.args[3]));
+    send(".DONE:" + command.args[0] + ";");
+  } else if (command.action == "DISPLAY_SCROLL") {
+    uBit.display.scroll(command.args[1]);
+    send(".DONE:" + command.args[0] + ";");
+  } else {
+    send(".INVALID_COMMAND_ERROR:" + command.args[0] + ";");
   }
 }
 
