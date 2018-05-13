@@ -31,12 +31,12 @@ Command parseCommand(ManagedString commandTemp) {
       continue;
     }
     if (stage == 0) {
-      action.append(1, command[i]);
+      action = action + command[i];
     } else if (stage == 1) {
       if (command[i] == '"') {
         if (inString == 0) {
           inString = 1;
-          args.push_back("");
+          args.push_back(std::string());
         } else {
           inString = 0;
         }
@@ -44,7 +44,7 @@ Command parseCommand(ManagedString commandTemp) {
       } else if (command[i] == ',' && inString == 0) {
         arg++;
       } else if (inString == 1) {
-        args[arg].append(1, command[i]);
+        args[arg] = args[arg] + command[i];
       }
     }
   }
@@ -52,9 +52,9 @@ Command parseCommand(ManagedString commandTemp) {
 }
 
 void runCommand(Command command, void (*send)(std::string)) {
-  send(command.action + ";");
-  send(command.args[0] + ";");
-  send(command.args[1] + ";");
+  send("." + command.action + ";");
+  send("." + command.args[0] + ";");
+  send("." + command.args[1] + ";");
   if (command.action == "DISPLAY_PLOT") {
     uBit.display.image.setPixelValue(std::stoi(command.args[1]), std::stoi(command.args[2]), std::stoi(command.args[3]));
     send(".DONE:" + command.args[0] + ";");
