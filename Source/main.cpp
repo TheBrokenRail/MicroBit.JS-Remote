@@ -24,27 +24,27 @@ Command parseCommand(ManagedString commandTemp) {
   int stage = 0;
   int arg = 0;
   std::vector<std::string> args;
+  std::string temp = "";
   int inString = 0;
   for (int i = 0; i < command.length(); i++) {
-    if (command[i] == ':') {
+    if (stage == 0 && command[i] == ':') {
       stage = 1;
-      continue;
-    }
-    if (stage == 0) {
+    } else if (stage == 0) {
       action = action + command[i];
     } else if (stage == 1) {
-      if (command[i] == '"') {
+      if (command[i] == '"' && command[i - 1] != '\\') {
         if (inString == 0) {
           inString = 1;
-          args.push_back(std::string());
         } else {
           inString = 0;
         }
         continue;
       } else if (command[i] == ',' && inString == 0) {
+        args.push_back(temp);
+        temp = "";
         arg++;
       } else if (inString == 1) {
-        args[arg] = args[arg] + command[i];
+        temp = temp + command[i];
       }
     }
   }
