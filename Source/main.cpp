@@ -52,6 +52,9 @@ Command parseCommand(ManagedString commandTemp) {
 }
 
 void runCommand(Command command, void (*send)(std::string)) {
+  send(command.action + ";");
+  send(command.args[0] + ";");
+  send(command.args[1] + ";");
   if (command.action == "DISPLAY_PLOT") {
     uBit.display.image.setPixelValue(std::stoi(command.args[1]), std::stoi(command.args[2]), std::stoi(command.args[3]));
     send(".DONE:" + command.args[0] + ";");
