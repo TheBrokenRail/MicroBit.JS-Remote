@@ -3,6 +3,9 @@
 #include "MicroBitUARTService.h"
 #include <vector>
 
+MicroBit uBit;
+MicroBitUARTService *uart;
+
 class Command {
   public:
     std::string action;
@@ -15,7 +18,8 @@ Command::Command(std::string newAction, std::vector<std::string> newArgs) {
   args = newArgs;
 }
 
-Command parseCommand(std::string command) {
+Command parseCommand(ManagedString commandTemp) {
+  const char *ommand = commandTemp.toCharArray();
   std::string action = "";
   int stage = 0;
   int arg = 0;
@@ -47,24 +51,33 @@ Command parseCommand(std::string command) {
   return Command(action, args);
 }
 
-MicroBit uBit;
-MicroBitUARTService *uart;
+void runCommand(Command command, void (*send)(std::string)) {
+  switch (command.action) {
+    case "DISPLAY_PLOT":
+      uBit.display.image.setPixelValue(std::stoi(command.args[1]), std::stoi(command.args[2]), std::stoi(command.args[3]));
+      send(".DONE:" + command.args[0] + ";");
+      break;
+    default:
+      send(".INVALID_COMMAND_ERROR:" + args[0] + ";");
+  }
+}
 
 int connected = 0;
 int bluetooth = 0;
 
 void bluetoothSend(std::string msg) {
-  uart->send(msg);
+  uart->send(ManagedString(msg.c_str()));
 }
 
 void onConnected(MicroBitEvent) {
   if (connected == 0) {
     bluetooth = 1;
     connected = 1;
-    ManagedString eom(";");
     while (connected == 1 && bluetooth == 1) {
-      std::string msg = uart->readUntil(eom);
-      runCommand(parseCommand(msg), uBit, bluetoothSend);
+      ManagedString msg = uart->readUntil(";");
+      if (msg.toCharArray()[0] != '.') {
+        runCommand(parseCommand(msg), bluetoothSend);
+      }
     }
   }
 }
