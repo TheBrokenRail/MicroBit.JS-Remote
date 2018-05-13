@@ -64,17 +64,20 @@ void runCommand(Command command, void (*send)(std::string)) {
 }
 
 int connected = 0;
-int bluetooth = 0;
 
 void bluetoothSend(std::string msg) {
   uart->send(msg.c_str());
+}
+
+void serialSend(std::string msg) {
+  uBit.serial.printf(msg.c_str());
 }
 
 void onConnected(MicroBitEvent) {
   if (connected == 0) {
     bluetooth = 1;
     connected = 1;
-    while (connected == 1 && bluetooth == 1) {
+    while (connected == 1) {
       ManagedString msg = uart->readUntil(";");
       if (msg.toCharArray()[0] != '.') {
         runCommand(parseCommand(msg), bluetoothSend);
@@ -84,7 +87,6 @@ void onConnected(MicroBitEvent) {
 }
 
 void onDisconnected(MicroBitEvent) {
-  bluetooth = 0;
   connected = 0;
 }
 
@@ -96,6 +98,13 @@ int main() {
   uBit.messageBus.listen(MICROBIT_ID_BLE, MICROBIT_BLE_EVT_CONNECTED, onConnected);
   uBit.messageBus.listen(MICROBIT_ID_BLE, MICROBIT_BLE_EVT_DISCONNECTED, onDisconnected);
   uart = new MicroBitUARTService(*uBit.ble, 32, 32);
+  
+  while (true) {
+    ManagedString msg = uBit.serial.readUntil(";");
+    if (msg.toCharArray()[0] != '.') {
+      runCommand(parseCommand(msg), serialSend);
+    }
+  }
 
   // If main exits, there may still be other fibers running or registered event handlers etc.
   // Simply release this fiber, which will mean we enter the scheduler. Worse case, we then
