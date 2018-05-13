@@ -56,7 +56,7 @@ void runCommand(Command command, void (*send)(std::string)) {
     uBit.display.image.setPixelValue(std::stoi(command.args[1]), std::stoi(command.args[2]), std::stoi(command.args[3]));
     send(".DONE:" + command.args[0] + ";");
   } else if (command.action == "DISPLAY_SCROLL") {
-    uBit.display.scroll(command.args[1]);
+    uBit.display.scroll(command.args[1].c_str());
     send(".DONE:" + command.args[0] + ";");
   } else {
     send(".INVALID_COMMAND_ERROR:" + command.args[0] + ";");
@@ -67,7 +67,7 @@ int connected = 0;
 int bluetooth = 0;
 
 void bluetoothSend(std::string msg) {
-  uart->send(ManagedString(msg.c_str()));
+  uart->send(msg.c_str());
 }
 
 void onConnected(MicroBitEvent) {
