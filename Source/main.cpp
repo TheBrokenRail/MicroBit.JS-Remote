@@ -1,7 +1,7 @@
 #include <string>
+#include <vector>
 #include "MicroBit.h"
 #include "MicroBitUARTService.h"
-#include <vector>
 
 MicroBit uBit;
 MicroBitUARTService *uart;
@@ -19,7 +19,7 @@ Command::Command(std::string newAction, std::vector<std::string> newArgs) {
 }
 
 Command parseCommand(ManagedString commandTemp) {
-  const char *command = commandTemp.toCharArray();
+  std::string command = commandTemp.toCharArray();
   std::string action = "";
   int stage = 0;
   int arg = 0;
