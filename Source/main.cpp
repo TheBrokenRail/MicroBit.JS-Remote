@@ -77,7 +77,7 @@ void onConnected(MicroBitEvent) {
   if (connected == 0) {
     connected = 1;
     while (connected == 1) {
-      ManagedString msg = uart->readUntil(";");
+      ManagedString msg = uart->readUntil(";", SYNC_SPINWAIT);
       if (msg.toCharArray()[0] != '.') {
         runCommand(parseCommand(msg), bluetoothSend);
       }
@@ -99,7 +99,7 @@ int main() {
   uart = new MicroBitUARTService(*uBit.ble, 32, 32);
   
   while (true) {
-    ManagedString msg = uBit.serial.readUntil(";");
+    ManagedString msg = uBit.serial.readUntil(";", SYNC_SPINWAIT);
     serialSend(".MSG:" + std::string(msg.toCharArray()) + ";");
     if (msg.toCharArray()[0] != '.') {
       runCommand(parseCommand(msg), serialSend);
