@@ -29,7 +29,7 @@ Command parseCommand(ManagedString commandTemp) {
     if (stage == 0 && command[i] == ':') {
       stage = 1;
     } else if (stage == 0) {
-      action.append(1, command[i]);
+      action.push_back(command[i]);
     } else if (stage == 1) {
       if (command[i] == '"' && command[i - 1] != '\\') {
         if (inString == 0) {
@@ -41,7 +41,7 @@ Command parseCommand(ManagedString commandTemp) {
         args.push_back(temp);
         temp = "";
       } else if (inString == 1) {
-        temp.append(1, command[i]);
+        temp.push_back(command[i]);
       }
     }
   }
@@ -78,9 +78,7 @@ void onConnected(MicroBitEvent) {
     connected = 1;
     while (connected == 1) {
       ManagedString msg = uart->readUntil(";");
-      if (msg.toCharArray()[0] != '.') {
-        runCommand(parseCommand(msg), bluetoothSend);
-      }
+      runCommand(parseCommand(msg), bluetoothSend);
     }
   }
 }
@@ -98,11 +96,15 @@ int main() {
   uBit.messageBus.listen(MICROBIT_ID_BLE, MICROBIT_BLE_EVT_DISCONNECTED, onDisconnected);
   uart = new MicroBitUARTService(*uBit.ble, 32, 32);
   
+  ManagedString buffer("");
   while (true) {
     ManagedString msg = uBit.serial.readUntil(";");
     serialSend(".MSG:" + std::string(msg.toCharArray()) + ";");
-    if (msg.toCharArray()[0] != '.') {
-      runCommand(parseCommand(msg), serialSend);
+    if (std::string(msg.toCharArray()).back() == ';') {
+      runCommand(parseCommand(buffer + msg), serialSend);
+      buffer = "";
+    } else {
+      buffer = buffer + msg;
     }
   }
 
